@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Loops & Strings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slideshow-container {
+            max-width: 1000px;
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            padding: 40px;
+            text-align: center;
+            min-height: 600px;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+
+        .code-container {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .output {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .navigation {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 40px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .animated-text {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .practice-question {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .question-title {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .answer-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .answer-btn:hover {
+            background: #2ecc71;
+            transform: scale(1.05);
+        }
+
+        .answer {
+            display: none;
+            background: #d5f4e6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .loop-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .loop-step {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 25px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .keyword {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .string {
+            color: #f39c12;
+        }
+
+        .number {
+            color: #3498db;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px;
+                min-height: 500px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            .navigation {
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slideshow-container">
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">15</span>
+        </div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1 class="animated-text">JavaScript Loops & Strings</h1>
+            <div class="highlight">
+                <h2>🚀 What You'll Learn</h2>
+                <p>• While & Do-While Loops</p>
+                <p>• For & For...of Loops</p>
+                <p>• Strings & Template Literals</p>
+                <p>• Practice Questions</p>
+            </div>
+            <div class="loop-visual">
+                <div class="loop-step">Learn</div>
+                <div class="loop-step">Practice</div>
+                <div class="loop-step">Master</div>
+            </div>
+        </div>
+
+        <!-- Slide 2: While Loop -->
+        <div class="slide">
+            <h2 class="animated-text">While Loop</h2>
+            <div class="highlight">
+                <p>Executes code repeatedly <strong>while</strong> a condition is true</p>
+            </div>
+            <div class="code-container">
+<pre><span class="keyword">let</span> i = <span class="number">0</span>;
+<span class="keyword">while</span> (i < <span class="number">5</span>) {
+    console.log(<span class="string">"Count: "</span> + i);
+    i++; <span style="color: #95a5a6;">// Don't forget to increment!</span>
+}</pre>
+            </div>
+            <div class="output">
+                Output:<br>
+                Count: 0<br>
+                Count: 1<br>
+                Count: 2<br>
+                Count: 3<br>
+                Count: 4
+            </div>
+        </div>
+
+        <!-- Slide 3: Do-While Loop -->
+        <div class="slide">
+            <h2 class="animated-text">Do-While Loop</h2>
+            <div class="highlight">
+                <p>Executes code at least <strong>once</strong>, then repeats while condition is true</p>
+            </div>
+            <div class="code-container">
+<pre><span class="keyword">let</span> i = <span class="number">0</span>;
+<span class="keyword">do</span> {
+    console.log(<span class="string">"This runs at least once: "</span> + i);
+    i++;
+} <span class="keyword">while</span> (i < <span class="number">3</span>);</pre>
+            </div>
+            <div class="output">
+                Output:<br>
+                This runs at least once: 0<br>
+                This runs at least once: 1<br>
+                This runs at least once: 2
+            </div>
+            <div class="highlight">
+                <strong>Key Difference:</strong> Do-while runs the code first, then checks the condition!
+            </div>
+        </div>
+
+        <!-- Slide 4: For Loop -->
+        <div class="slide">
+            <h2 class="animated-text">For Loop</h2>
+            <div class="highlight">
+                <p>Perfect for when you know exactly how many times to loop</p>
+            </div>
+            <div class="code-container">
+<pre><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i < <span class="number">5</span>; i++) {
+    console.log(<span class="string">"Iteration: "</span> + i);
+}</pre>
+            </div>
+            <div class="loop-visual">
+                <div class="loop-step">Initialize</div>
+                <div class="loop-step">Condition</div>
+                <div class="loop-step">Increment</div>
+            </div>
+            <div class="output">
+                Output:<br>
+                Iteration: 0<br>
+                Iteration: 1<br>
+                Iteration: 2<br>
+                Iteration: 3<br>
+                Iteration: 4
+            </div>
+        </div>
+
+        <!-- Slide 5: For...of Loop -->
+        <div class="slide">
+            <h2 class="animated-text">For...of Loop</h2>
+            <div class="highlight">
+                <p>Perfect for iterating through arrays and strings</p>
+            </div>
+            <div class="code-container">
+<pre><span class="keyword">const</span> fruits = [<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"orange"</span>];
+
+<span class="keyword">for</span> (<span class="keyword">const</span> fruit <span class="keyword">of</span> fruits) {
+    console.log(<span class="string">"I love "</span> + fruit);
+}</pre>
+            </div>
+            <div class="output">
+                Output:<br>
+                I love apple<br>
+                I love banana<br>
+                I love orange
+            </div>
+            <div class="highlight">
+                <strong>Bonus:</strong> Works with strings too!
+            </div>
+        </div>
+
+        <!-- Slide 6: Strings Basics -->
+        <div class="slide">
+            <h2 class="animated-text">JavaScript Strings</h2>
+            <div class="highlight">
+                <p>Strings are sequences of characters used to represent text</p>
+            </div>
+            <div class="code-container">
+<pre><span class="keyword">let</span> singleQuotes = <span class="string">'Hello World'</span>;
+<span class="keyword">let</span> doubleQuotes = <span class="string">"Hello World"</span>;
+<span class="keyword">let</span> backticks = <span class="string">`Hello World`</span>;
+
+<span style="color: #95a5a6;">// String concatenation</span>
+<span class="keyword">let</span> firstName = <span class="string">"John"</span>;
+<span class="keyword">let</span> lastName = <span class="string">"Doe"</span>;
+<span class="keyword">let</span> fullName = firstName + <span class="string">" "</span> + lastName;</pre>
+            </div>
+            <div class="output">
+                Result: "John Doe"
+            </div>
+        </div>
+
+        <!-- Slide 7: Template Literals -->
+        <div class="slide">
+            <h2 class="animated-text">Template Literals 🎯</h2>
+            <div class="highlight">
+                <p>Use backticks (`) for powerful string formatting with ${} syntax</p>
+            </div>
+            <div class="code-container">
+<pre><span class="keyword">const</span> name = <span class="string">"Alice"</span>;
+<span class="keyword">const</span> age = <span class="number">25</span>;
+<span class="keyword">const</span> score = <span class="number">95</span>;
+
+<span class="keyword">const</span> message = <span class="string">`Hello ${name}!
+You are ${age} years old.
+Your score is ${score}%.
+Grade: ${score >= 90 ? 'A' : 'B'}`</span>;
+
+console.log(message);</pre>
+            </div>
+            <div class="output">
+                Output:<br>
+                Hello Alice!<br>
+                You are 25 years old.<br>
+                Your score is 95%.<br>
+                Grade: A
+            </div>
+        </div>
+
+        <!-- Slide 8: String Methods -->
+        <div class="slide">
+            <h2 class="animated-text">Useful String Methods</h2>
+            <div class="code-container">
+<pre><span class="keyword">const</span> text = <span class="string">"JavaScript is Amazing"</span>;
+
+console.log(text.length);        <span style="color: #95a5a6;">// 21</span>
+console.log(text.toUpperCase()); <span style="color: #95a5a6;">// "JAVASCRIPT IS AMAZING"</span>
+console.log(text.toLowerCase()); <span style="color: #95a5a6;">// "javascript is amazing"</span>
+console.log(text.charAt(<span class="number">0</span>));       <span style="color: #95a5a6;">// "J"</span>
+console.log(text.indexOf(<span class="string">"Script"</span>)); <span style="color: #95a5a6;">// 4</span>
+console.log(text.slice(<span class="number">0</span>, <span class="number">10</span>));    <span style="color: #95a5a6;">// "JavaScript"</span></pre>
+            </div>
+            <div class="highlight">
+                <strong>Pro Tip:</strong> String methods don't modify the original string - they return a new one!
+            </div>
+        </div>
+
+        <!-- Slide 9: Combining Loops with Strings -->
+        <div class="slide">
+            <h2 class="animated-text">Loops + Strings = Power! 💪</h2>
+            <div class="code-container">
+<pre><span class="keyword">const</span> word = <span class="string">"HELLO"</span>;
+
+<span style="color: #95a5a6;">// Using for...of to iterate through each character</span>
+<span class="keyword">for</span> (<span class="keyword">const</span> letter <span class="keyword">of</span> word) {
+    console.log(<span class="string">`Letter: ${letter}`</span>);
+}
+
+<span style="color: #95a5a6;">// Using regular for loop</span>
+<span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i < word.length; i++) {
+    console.log(<span class="string">`Position ${i}: ${word[i]}`</span>);
+}</pre>
+            </div>
+            <div class="output">
+                Output:<br>
+                Letter: H, Letter: E, Letter: L, Letter: L, Letter: O<br>
+                Position 0: H, Position 1: E, Position 2: L...
+            </div>
+        </div>
+
+        <!-- Slide 10: Practice Question 1 -->
+        <div class="slide">
+            <h2 class="animated-text">Practice Time! 🧠</h2>
+            <div class="practice-question">
+                <div class="question-title">Question 1: While Loop Challenge</div>
+                <p>Write a while loop that prints numbers from 1 to 10, but only the even numbers.</p>
+                <button class="answer-btn" onclick="toggleAnswer('answer1')">Show Answer</button>
+                <div id="answer1" class="answer">
+                    <div class="code-container">
+<pre><span class="keyword">let</span> i = <span class="number">2</span>; <span style="color: #95a5a6;">// Start with first even number</span>
+<span class="keyword">while</span> (i <= <span class="number">10</span>) {
+    console.log(i);
+    i += <span class="number">2</span>; <span style="color: #95a5a6;">// Increment by 2 to get next even</span>
+}
+<span style="color: #95a5a6;">// Output: 2, 4, 6, 8, 10</span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Practice Question 2 -->
+        <div class="slide">
+            <h2 class="animated-text">Practice Question 2</h2>
+            <div class="practice-question">
+                <div class="question-title">For...of Loop Challenge</div>
+                <p>Given an array of names, use for...of to create a greeting message for each person using template literals.</p>
+                <div class="code-container">
+<pre><span class="keyword">const</span> names = [<span class="string">"Alice"</span>, <span class="string">"Bob"</span>, <span class="string">"Charlie"</span>];</pre>
+                </div>
+                <button class="answer-btn" onclick="toggleAnswer('answer2')">Show Answer</button>
+                <div id="answer2" class="answer">
+                    <div class="code-container">
+<pre><span class="keyword">const</span> names = [<span class="string">"Alice"</span>, <span class="string">"Bob"</span>, <span class="string">"Charlie"</span>];
+
+<span class="keyword">for</span> (<span class="keyword">const</span> name <span class="keyword">of</span> names) {
+    console.log(<span class="string">`Hello, ${name}! Welcome to JavaScript!`</span>);
+}
+<span style="color: #95a5a6;">// Output:
+// Hello, Alice! Welcome to JavaScript!
+// Hello, Bob! Welcome to JavaScript!
+// Hello, Charlie! Welcome to JavaScript!</span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Practice Question 3 -->
+        <div class="slide">
+            <h2 class="animated-text">Practice Question 3</h2>
+            <div class="practice-question">
+                <div class="question-title">String & Loop Challenge</div>
+                <p>Create a function that takes a string and returns it reversed using a for loop.</p>
+                <button class="answer-btn" onclick="toggleAnswer('answer3')">Show Answer</button>
+                <div id="answer3" class="answer">
+                    <div class="code-container">
+<pre><span class="keyword">function</span> reverseString(str) {
+    <span class="keyword">let</span> reversed = <span class="string">""</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = str.length - <span class="number">1</span>; i >= <span class="number">0</span>; i--) {
+        reversed += str[i];
+    }
+    
+    <span class="keyword">return</span> reversed;
+}
+
+console.log(reverseString(<span class="string">"Hello"</span>)); <span style="color: #95a5a6;">// "olleH"</span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Practice Question 4 -->
+        <div class="slide">
+            <h2 class="animated-text">Practice Question 4</h2>
+            <div class="practice-question">
+                <div class="question-title">Do-While Challenge</div>
+                <p>Write a do-while loop that asks the user to guess a number (1-5) until they get it right. Use a predetermined correct answer.</p>
+                <button class="answer-btn" onclick="toggleAnswer('answer4')">Show Answer</button>
+                <div id="answer4" class="answer">
+                    <div class="code-container">
+<pre><span class="keyword">const</span> correctAnswer = <span class="number">3</span>;
+<span class="keyword">let</span> userGuess;
+
+<span class="keyword">do</span> {
+    userGuess = parseInt(prompt(<span class="string">"Guess a number between 1 and 5:"</span>));
+    
+    <span class="keyword">if</span> (userGuess !== correctAnswer) {
+        alert(<span class="string">"Wrong! Try again."</span>);
+    }
+} <span class="keyword">while</span> (userGuess !== correctAnswer);
+
+alert(<span class="string">"Correct! You guessed it!"</span>);</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Advanced Example -->
+        <div class="slide">
+            <h2 class="animated-text">Advanced Example 🚀</h2>
+            <div class="highlight">
+                <p>Let's combine everything: loops, strings, and template literals!</p>
+            </div>
+            <div class="code-container">
+<pre><span class="keyword">const</span> students = [
+    { name: <span class="string">"Alice"</span>, grade: <span class="number">95</span> },
+    { name: <span class="string">"Bob"</span>, grade: <span class="number">87</span> },
+    { name: <span class="string">"Charlie"</span>, grade: <span class="number">92</span> }
+];
+
+<span class="keyword">for</span> (<span class="keyword">const</span> student <span class="keyword">of</span> students) {
+    <span class="keyword">const</span> letterGrade = student.grade >= <span class="number">90</span> ? <span class="string">'A'</span> : 
+                        student.grade >= <span class="number">80</span> ? <span class="string">'B'</span> : <span class="string">'C'</span>;
+    
+    console.log(<span class="string">`${student.name}: ${student.grade}% (${letterGrade})`</span>);
+}</pre>
+            </div>
+            <div class="output">
+                Output:<br>
+                Alice: 95% (A)<br>
+                Bob: 87% (B)<br>
+                Charlie: 92% (A)
+            </div>
+        </div>
+
+        <!-- Slide 15: Summary -->
+        <div class="slide">
+            <h1 class="animated-text">🎉 Congratulations!</h1>
+            <div class="highlight">
+                <h2>You've Mastered:</h2>
+                <p>✅ While loops for conditional repetition</p>
+                <p>✅ Do-while loops for guaranteed execution</p>
+                <p>✅ For loops for counted iterations</p>
+                <p>✅ For...of loops for array/string iteration</p>
+                <p>✅ String manipulation and methods</p>
+                <p>✅ Template literals for dynamic strings</p>
+            </div>
+            <div class="loop-visual">
+                <div class="loop-step">Keep</div>
+                <div class="loop-step">Practicing</div>
+                <div class="loop-step">JavaScript!</div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">❮ Previous</button>
+            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next ❯</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlideIndex].classList.remove('active');
+            
+            if (n >= totalSlides) currentSlideIndex = 0;
+            if (n < 0) currentSlideIndex = totalSlides - 1;
+            
+            slides[currentSlideIndex].classList.add('active');
+            
+            // Update counter
+            document.getElementById('currentSlide').textContent = currentSlideIndex + 1;
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentSlideIndex === 0;
+            document.getElementById('nextBtn').disabled = currentSlideIndex === totalSlides - 1;
+        }
+
+        function changeSlide(n) {
+            currentSlideIndex += n;
+            showSlide(currentSlideIndex);
+        }
+
+        function toggleAnswer(answerId) {
+            const answer = document.getElementById(answerId);
+            const button = answer.previousElementSibling;
+            
+            if (answer.style.display === 'none' || answer.style.display === '') {
+                answer.style.display = 'block';
+                button.textContent = 'Hide Answer';
+                button.style.background = '#e74c3c';
+            } else {
+                answer.style.display = 'none';
+                button.textContent = 'Show Answer';
+                button.style.background = '#27ae60';
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(0);
+
+        // Add some interactive animations
+        setInterval(() => {
+            const steps = document.querySelectorAll('.loop-step');
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    step.style.animation = 'none';
+                    step.offsetHeight; // Trigger reflow
+                    step.style.animation = 'pulse 2s infinite';
+                }, index * 200);
+            });
+        }, 4000);
+    </script>
+</body>
+</html>
